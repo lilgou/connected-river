@@ -1,0 +1,220 @@
+version: 1
+scope: England river-health evidence
+sources:
+  water_quality_explorer:
+    title: EA Water Quality Explorer observations
+    theme: chemistry
+    kind: reference
+    url: https://environment.data.gov.uk/water-quality/data/observation?dateFrom=2025-01-01&dateTo=2025-01-02&limit=1&skip=0
+    probe_method: POST
+    probe_accept: text/csv
+    note: Acquired by the paginated determinand/year downloader so large queries are resumable.
+    refresh: daily
+    required_for_release: true
+    default: false
+  ecology_fish_bulk:
+    title: EA Ecology and Fish Data Explorer bulk surveys
+    theme: biology
+    kind: reference
+    url: https://environment.data.gov.uk/ecology/explorer/downloads/FW_Fish_Sites.zip
+    note: Acquired by download.ecology_bulk because the source is a family of biology-specific ZIP files.
+    refresh: monthly
+    required_for_release: true
+    default: false
+  edm_storm_overflows:
+    title: Event Duration Monitoring storm-overflow annual returns
+    theme: wastewater
+    kind: reference
+    url: https://www.data.gov.uk/dataset/19f6064d-7356-466f-844e-d20ea10ae9fd/event-duration-monitoring-storm-overflows-annual-returns
+    note: Acquired by download.edm_storm_overflows, which discovers each reporting year's current file.
+    refresh: annually
+    required_for_release: true
+    default: false
+  integrated_river_network:
+    title: UKCEH topology-enabled river network
+    theme: network_topology
+    kind: reference
+    url: https://www.ceh.ac.uk/data/15000-watercourse-network
+    local_path: data/raw/river_structure/IRN_river_line.csv
+    required_columns: [RIVERS_ID, FNODE_FULL, TNODE_FULL, SHREVE, geometry]
+    note: >-
+      Request the topology-enabled network through UKCEH's data-licensing
+      route; a line-only map layer is not sufficient for this workflow. The
+      licensed local source is registered once; all snapping and routing are
+      rebuilt from it. Its 436,187 raw links form 432,574 directed graph
+      edges; all 3,613 additional parallel links are retained as aliases, with
+      shortest-link routing length and a non-summed positive-Shreve hydrology
+      representative. Forty-seven spatially reused raw node IDs are split at
+      a declared 25 m endpoint-continuity tolerance while preserving raw IDs.
+    refresh: static
+    required_for_release: true
+    default: false
+  nrfa_daily_flows:
+    title: National River Flow Archive quality-controlled daily flows
+    theme: hydrology
+    kind: reference
+    url: https://nrfa.ceh.ac.uk/data/use-nrfa-data/nrfa-api
+    note: >-
+      Use for model-grade historic flow; live flood-monitoring feeds are
+      operational context, not a substitute. Quality-controlled GDF is normally
+      refreshed annually by water year through 30 September, so a target calendar
+      year can remain partial even after the newest archive update. The fixed Shreve flow-influence
+      proxy was checked against 1,509 positive paired gauges (Spearman 0.830;
+      fitted exponent 0.716, rounded to 0.72; median/p90 factor error 1.67/3.62)
+      and is not observed discharge at ungauged tributaries.
+    refresh: annually
+    required_for_release: true
+    default: false
+  consented_discharges:
+    title: Consented discharges - sewage - final/treated effluent
+    theme: permitted_pressure
+    kind: arcgis_feature_layer
+    url: https://services3.arcgis.com/Bb8lfThdhugyc4G3/ArcGIS/rest/services/Sewage_discharges_Final_treated_effluent/FeatureServer/0
+    dataset_id: 5fe5ab2e-d465-11e4-8a42-f0def148f590
+    note: >-
+      Tier 1 final/treated sewage subset of the Environment Agency register,
+      hosted by The Rivers Trust. Conditional-licence source; keep source and
+      identifiable derived outlets internal unless the applicable terms permit
+      redistribution.
+    refresh: monthly
+    required_for_release: true
+    default: false
+  urban_wastewater_treatment:
+    title: Urban Waste Water Treatment Directive plants and agglomerations
+    theme: wastewater
+    kind: reference
+    url: https://www.data.gov.uk/dataset/d7e2c57b-110a-462b-97a0-9833e7d26cc2/wastewater-treatment-in-england
+    note: Catalogue-only context; storm-overflow evidence is supplied by the annual EDM returns above.
+    refresh: annually
+    default: false
+  catchment_classifications:
+    title: WFD water-body classifications
+    theme: regulatory_status
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England/classifications.csv
+    filename: classifications.csv
+    required_columns: [Water Body ID, Year, Status, Classification Level]
+    refresh: quarterly
+    required_for_release: true
+    default: true
+  catchment_objectives:
+    title: WFD water-body objectives
+    theme: regulatory_status
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England/objectives.csv
+    filename: objectives.csv
+    required_columns: [Water Body ID, Year, Objective Type]
+    refresh: quarterly
+    required_for_release: true
+    default: true
+  catchment_rnags:
+    title: Reasons for not achieving good status and deterioration
+    theme: pressures
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England/rnags.csv
+    filename: rnags.csv
+    required_columns: [Water Body ID, Reason Type, Pressure Tier 1]
+    refresh: quarterly
+    required_for_release: true
+    default: true
+  catchment_measures:
+    title: River-basin measures and actions
+    theme: interventions
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England/measures.csv
+    filename: measures.csv
+    refresh: quarterly
+    default: true
+  catchment_protected_areas:
+    title: Protected areas linked to water bodies
+    theme: sensitivity
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England/protected-areas.csv
+    filename: protected_areas.csv
+    required_columns: [Water Body ID, Protected Area Type]
+    refresh: quarterly
+    required_for_release: true
+    default: true
+  catchment_geometry:
+    title: Catchment Data Explorer England water-body geometry
+    theme: spatial_reference
+    kind: direct
+    url: https://environment.data.gov.uk/catchment-planning/England.geojson
+    filename: water_bodies.geojson
+    refresh: quarterly
+    required_for_release: true
+    default: true
+  flood_monitoring_level_stations:
+    title: Near-real-time river-level monitoring stations
+    theme: hydrology
+    kind: api_snapshot
+    url: https://environment.data.gov.uk/flood-monitoring/id/stations?parameter=level&_limit=10000
+    filename: level_stations.json
+    refresh: daily
+    default: true
+  flood_monitoring_rainfall_stations:
+    title: Near-real-time rainfall monitoring stations
+    theme: climate
+    kind: api_snapshot
+    url: https://environment.data.gov.uk/flood-monitoring/id/stations?parameter=rainfall&_limit=10000
+    filename: rainfall_stations.json
+    refresh: daily
+    default: true
+  pollution_incidents:
+    title: Significant and major environmental pollution incidents
+    theme: acute_pressure
+    kind: defra_dataset
+    dataset_id: 8627faf0-d465-11e4-bfdb-f0def148f590
+    include_pattern: '(?i)pollution.*\.(zip|csv|xlsx)$'
+    refresh: quarterly
+    default: true
+  river_obstacles:
+    title: River obstacles and potential fish-passage barriers
+    theme: physical_pressure
+    kind: reference
+    url: https://www.river-obstacles.org.uk
+    note: The official catalogue currently exposes an interactive external resource but no bulk file.
+    refresh: monthly
+    default: false
+  river_habitat_surveys:
+    title: River Habitat Survey details and summary results
+    theme: habitat
+    kind: defra_dataset
+    dataset_id: 6d51f2ae-d465-11e4-b4b5-f0def148f590
+    include_pattern: '(?i)river.*habitat.*\.zip$'
+    refresh: annually
+    required_for_release: true
+    default: true
+  river_surveillance_network:
+    title: NCEA River Surveillance Network analysis-ready data
+    theme: integrated_monitoring
+    kind: defra_dataset
+    dataset_id: 21763290-f395-4ca1-bcf6-884c2e7548d4
+    include_pattern: '(?i)(analysis|river|network).*\.(zip|csv|xlsx)$'
+    refresh: annually
+    required_for_release: true
+    default: true
+  abstraction_returns:
+    title: National abstraction licence and returns evidence
+    theme: water_resources
+    kind: defra_dataset
+    dataset_id: 8a682192-4a1b-4e40-84d4-5671bfa5671c
+    include_pattern: '(?i)(abstraction|licen|return).*\.(zip|csv|xlsx|gpkg)$'
+    refresh: biannually
+    default: false
+  living_england:
+    title: Living England broad habitat map
+    theme: land_cover
+    kind: defra_dataset
+    dataset_id: 042f14b2-3076-420d-b604-9657c0398fae
+    include_pattern: '(?i)(living.*england|habitat).*(zip|gpkg)$'
+    refresh: annually
+    default: false
+  river_ecosystem_services:
+    title: River natural-capital condition and ecosystem services
+    theme: natural_capital
+    kind: defra_dataset
+    dataset_id: 0800e296-664c-4ce2-9cdd-cca6ca244de4
+    include_pattern: '(?i)(river|water.bod).*(zip|gpkg|csv)$'
+    refresh: static
+    default: false

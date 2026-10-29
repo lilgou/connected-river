@@ -1,0 +1,79 @@
+profile: connected_river
+
+project:
+  name: connected_river
+  crs_projected: EPSG:27700
+  crs_wgs84: EPSG:4326
+
+run:
+  # The public demonstration and integrated product begin in 2018. Earlier
+  # archive years are not downloaded by default; lower this only when a study
+  # specifically needs a longer historical reconstruction.
+  online_matching_start_year: 2018
+  # The 41 target determinands are required from the start of the demonstration
+  # period. Earlier gaps remain visible but do not stop the run.
+  exact_determinand_complete_from_year: 2018
+  # Allow unavailable target-determinand partitions to remain visible in the
+  # download summary instead of stopping the complete run.
+  enforce_target_determinand_completeness: false
+  public_extension_start_year: 2018
+  target_year: 2025
+  seed: 2025
+  overwrite: false
+
+matching:
+  # Edit this single value for an alternative research build. It controls both
+  # candidate support and the final survey-anchored chemistry join. The default
+  # uses a six-calendar-month window; 12 would request the preceding year.
+  # Values above 12 need additional earlier source data.
+  antecedent_window_months: 6
+  # Computational candidate prefilter. This is deliberately wider than the
+  # network limit so a genuinely connected path is not lost because the two
+  # independently snapped source coordinates are offset from the river line.
+  max_euclidean_distance_m: 15000
+  max_network_distance_m: 10000
+  max_snap_distance_m: 1000
+  min_wq_samples_per_year: 3
+  min_wq_target_determinands: 3
+  max_acceptable_snap_distance_m: 250
+  # The default match supplies local river-chemistry context rather than claiming
+  # that a station measures antecedent exposure at the biological reach.
+  # Physically connected stations are therefore eligible in either direction;
+  # direction remains explicit and the same tributary and route checks are
+  # applied in both directions. Current implemented direction options are:
+  # - either_direction: eligible in either direction
+  # - upstream_only: eligible only in upstream direction
+  candidate_direction: either_direction
+  allow_downstream_wq: true
+  # Incoming branches are compared with additive IRN Shreve magnitude raised
+  # to this fixed exponent, then normalized at each confluence.  The exponent
+  # has been compared with NRFA mean-flow gauges. It is still a proxy rather
+  # than observed discharge at ungauged tributaries.
+  tributary_flow_proxy_exponent: 0.72
+  # Distance-based transport plausibility and decayed tributary influence use the
+  # same configured length scale (metres). Lower values favour very local
+  # connections; higher values retain more distant transport influence.
+  tributary_transport_decay_scale_m: 10000
+  # The proxy is kept as supporting information rather than used as an extra
+  # score. Matches crossing one of these tributaries are kept for review.
+  tributary_penalty_points: 0
+  allow_proxy_minor_tributaries: false
+  major_tributary_flow_fraction: 0.25
+  side_tributary_upstream_cutoff_m: 10000
+  # Optional route modifiers are only applied when source route layers are supplied;
+  # missing reservoir/tidal/abstraction layers are reported explicitly rather than
+  # interpreted as evidence of absence.
+
+flow:
+  source: nrfa_gauged_daily_flow
+  # Keep a fixed flow-reference period so annual updates do not change the
+  # reference distribution or recalculate earlier values.
+  reference_start: 1974-05-20
+  reference_end: 2019-03-29
+  minimum_reference_coverage: 0.5
+  low_flow_quantiles: [0.05, 0.25]
+  high_flow_quantiles: [0.75, 0.95]
+
+outputs:
+  table_format: parquet
+  root: runs

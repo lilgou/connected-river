@@ -1,0 +1,26 @@
+name: connected-river
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - duckdb
+  - geopandas
+  - ipykernel
+  - jupyterlab
+  - matplotlib
+  - networkx
+  - numpy
+  - openpyxl
+  - pandas
+  - pillow
+  - pyarrow
+  - pydeck
+  - pyogrio
+  - pyproj
+  - pyyaml
+  - requests
+  - scikit-learn
+  - scipy
+  - shapely
+  - tqdm
+  - pytest

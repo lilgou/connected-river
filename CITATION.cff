@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: >-
+  If you use this workflow or its notebooks, please cite it using the details
+  below.
+title: "The Connected River"
+type: software
+authors:
+  - family-names: Gouldsbrough
+    given-names: Lily
+    affiliation: "UK Centre for Ecology & Hydrology"
+version: 0.1.0
+date-released: 2026-09-30
+license: MIT
+abstract: >-
+  This repository shows how monitoring data collected at different places and
+  times can be connected through a river network. It includes a reusable
+  matching workflow and an England-wide example.
+keywords:
+  - river health
+  - environmental data
+  - data integration
+  - river-network matching
+  - reproducible research
