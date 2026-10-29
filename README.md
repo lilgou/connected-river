@@ -18,6 +18,12 @@ The longer functions are kept in `connected_river/` so that the notebooks remain
 readable. The England-wide example is the demonstration, while the adaptable
 matching recipe is the main output.
 
+![The seven-stage workflow from source data acquisition to an exported joined dataset](output/readme_figures/connected_river_workflow.png)
+
+*The workflow keeps data preparation, network matching and the final join as
+separate, checkable stages. The filter, ranking and acceptance rules can be
+changed for a different monitoring question.*
+
 ## Repository contents
 
 ```text
@@ -132,6 +138,18 @@ Part 2 creates a zoomable monitoring map, response curves, a national
 1965–2025 macroinvertebrate series, catchment trajectories and paired-site
 change summaries by hydrometric area. These figures describe the monitoring
 record and do not assign a cause to the observed changes.
+
+![Maps comparing biological monitoring density, repeat monitoring and matched chemistry coverage across England](output/readme_figures/monitoring_support_by_area.png)
+
+*Monitoring density, repeat sampling and usable chemistry coverage vary across
+England. Showing them separately makes it clearer where the joined data can
+support further analysis.*
+
+![Annual biological monitoring effort and repeat-site change for five biological groups](output/readme_figures/biological_monitoring_through_time.png)
+
+*The joined dataset brings together several biological groups. The upper panel
+shows annual survey effort; the lower panels summarise change at repeatedly
+monitored sites rather than treating changing coverage as a biological trend.*
 
 ## Optional checks
 
