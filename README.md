@@ -1,27 +1,48 @@
 # The Connected River
 
-This repository shows how I built a joined river-monitoring dataset from data
-collected at different places and times. It covers downloading and formatting
-the source data, matching sites through the river network, joining chemistry to
-biological surveys and checking the result.
+The Connected River is a reusable workflow for bringing together monitoring
+data collected at different points along the river network and through time. It
+downloads and harmonises the source data, identifies defensible site matches
+through the river network, links earlier chemistry records to biological
+surveys and retains the evidence and checks behind each selected match.
 
-The two notebooks are intended to be read in order:
+The England-wide example demonstrates the method. The main output is the
+adaptable matching recipe, which can be changed for a different network,
+monitoring question or time window.
 
-- [`The_Connected_River_Part_1_Building.ipynb`](The_Connected_River_Part_1_Building.ipynb),
-  **The Connected River (Part 1) - Building**, explains and runs the reusable
-  matching method.
-- [`The_Connected_River_Part_2_Exploring.ipynb`](The_Connected_River_Part_2_Exploring.ipynb),
-  **The Connected River (Part 2) - Exploring**, uses the joined data for maps,
-  figures and long-term analysis.
+**[Building the dataset](#part-1-building)** · **[Exploring the result](#part-2-exploring)** · **[Set up](#set-up-the-environment)** · **[Adapt the recipe](#adapt-the-matching-recipe)** · **[Data and licences](THIRD_PARTY_DATA.md)**
 
-The longer functions are kept in `connected_river/` so that the notebooks remain
-readable. The England-wide example is the demonstration, while the adaptable
-matching recipe is the main output.
+## Start here
+
+The two notebooks are designed to be read in order.
+
+| Part 1: Building | Part 2: Exploring |
+|---|---|
+| Downloads and prepares the source data, applies the network-matching recipe and creates the joined tables. | Maps the joined evidence, examines monitoring coverage and explores change through time. |
+| **[Open The Connected River: Building](The_Connected_River_Part_1_Building.ipynb)** | **[Open The Connected River: Exploring](The_Connected_River_Part_2_Exploring.ipynb)** |
+
+### Part 1: Building
+
+The first notebook explains and runs the reusable method. The longer functions
+are kept in `connected_river/` so that the decisions and main stages remain
+readable.
 
 ![The Connected River workflow: collect, prepare, match and explore](output/readme_figures/connected_river_overview.svg)
 
 *Separate monitoring records are prepared and connected through an editable
 matching recipe before the joined data are mapped and explored.*
+
+### Part 2: Exploring
+
+The second notebook uses the joined data for maps, figures and long-term
+analysis. It first establishes where the evidence supports analysis, then
+separates spatial associations from changes observed through time.
+
+![Maps comparing biological monitoring density, repeat monitoring and matched chemistry coverage across England](output/readme_figures/monitoring_support_by_area.png)
+
+*Monitoring density, repeat sampling and usable chemistry coverage vary across
+England. Showing them separately makes it clearer where the joined data can
+support further analysis.*
 
 ## Repository contents
 
@@ -59,8 +80,8 @@ computer.
 ## Data needed
 
 Most observations are downloaded by the workflow and saved in the local
-workspace. Two UKCEH spatial datasets must be obtained separately under their
-own licence terms:
+workspace. Two spatial datasets from the UK Centre for Ecology & Hydrology
+(UKCEH) must be obtained separately under their own licence terms:
 
 - [UKCEH river-network access and licensing](https://www.ceh.ac.uk/data/15000-watercourse-network)
 - [Hydrometric Areas with Coastline](https://catalogue.ceh.ac.uk/documents/1957166d-7523-44f4-b279-aa5314163237)
@@ -138,12 +159,6 @@ Part 2 creates a zoomable monitoring map, response curves, a national
 change summaries by hydrometric area. These figures describe the monitoring
 record and do not assign a cause to the observed changes.
 
-![Maps comparing biological monitoring density, repeat monitoring and matched chemistry coverage across England](output/readme_figures/monitoring_support_by_area.png)
-
-*Monitoring density, repeat sampling and usable chemistry coverage vary across
-England. Showing them separately makes it clearer where the joined data can
-support further analysis.*
-
 ![Annual biological monitoring effort and repeat-site change for five biological groups](output/readme_figures/biological_monitoring_through_time.png)
 
 *The joined dataset brings together several biological groups. The upper panel
@@ -169,5 +184,6 @@ for important decisions.
 ## Funding
 
 This work was carried out as part of the UK Environmental Exposure Hub (EEx
-Hub), developed through the UKCEH National Capability for UK Challenges
-(NC-UK) programme and funded by NERC (NE/Y006208/1).
+Hub), developed through the UK Centre for Ecology & Hydrology (UKCEH) National
+Capability for UK Challenges (NC-UK) programme and funded by NERC
+(NE/Y006208/1).
