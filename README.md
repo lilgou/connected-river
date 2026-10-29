@@ -18,11 +18,10 @@ The longer functions are kept in `connected_river/` so that the notebooks remain
 readable. The England-wide example is the demonstration, while the adaptable
 matching recipe is the main output.
 
-![The seven-stage workflow from source data acquisition to an exported joined dataset](output/readme_figures/connected_river_workflow.png)
+![The Connected River workflow: collect, prepare, match and explore](output/readme_figures/connected_river_overview.svg)
 
-*The workflow keeps data preparation, network matching and the final join as
-separate, checkable stages. The filter, ranking and acceptance rules can be
-changed for a different monitoring question.*
+*Separate monitoring records are prepared and connected through an editable
+matching recipe before the joined data are mapped and explored.*
 
 ## Repository contents
 
