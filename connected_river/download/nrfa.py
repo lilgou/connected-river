@@ -86,7 +86,7 @@ def download_nrfa_station_catalogue(
     *,
     overwrite: bool = False,
 ) -> Path:
-    """Download and atomically cache the metadata used to locate NRFA gauges."""
+    """Download and safely cache the metadata used to locate NRFA gauges."""
     output_path = resolve_path(output_path)
     if not overwrite and is_valid_station_catalogue(output_path):
         return output_path

@@ -62,7 +62,7 @@ def download_file(
     dataset: str | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> Path:
-    """Download a public file with retries and an atomic final rename."""
+    """Download a public file with retries and replace it only when complete."""
     out = resolve_path(output_path).resolve()
     ensure_dir(out.parent)
     if out.exists() and not overwrite:

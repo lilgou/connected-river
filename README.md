@@ -183,7 +183,7 @@ for important decisions.
 
 ## Funding
 
-This work was carried out as part of the UK Environmental Exposure Hub (EEx
-Hub), developed through the UK Centre for Ecology & Hydrology (UKCEH) National
+This work was carried out as part of the UK Environmental Exposure Hub (EEx Hub),
+developed through the UK Centre for Ecology & Hydrology (UKCEH) National
 Capability for UK Challenges (NC-UK) programme and funded by NERC
 (NE/Y006208/1).

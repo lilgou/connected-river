@@ -167,8 +167,8 @@ _RELEASE_ASSET_ROLES = {
 }
 
 
-def _atomic_write_json(path: Path, payload: Any) -> Path:
-    """Write JSON with an atomic same-directory replace."""
+def _write_json_safely(path: Path, payload: Any) -> Path:
+    """Write JSON through a temporary file before replacing the final path."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid4().hex}.part")
     try:
@@ -180,7 +180,7 @@ def _atomic_write_json(path: Path, payload: Any) -> Path:
 
 
 def _write_csv_zip(csv_path: Path) -> Path:
-    """Create a deterministic, atomically replaced ZIP containing one CSV."""
+    """Create a repeatable ZIP and replace the final file only when complete."""
     zip_path = csv_path.with_suffix(csv_path.suffix + ".zip")
     temporary = zip_path.with_name(f".{zip_path.name}.{uuid4().hex}.part")
     member = ZipInfo(csv_path.name, date_time=(1980, 1, 1, 0, 0, 0))
@@ -385,7 +385,7 @@ def _write_public_data_products(
         analysis_ready_qa["status"] = "failed"
         raise ValueError("Analysis-ready release QA failed")
     qa_path = release_dir / "analysis_ready_qa.json"
-    _atomic_write_json(qa_path, analysis_ready_qa)
+    _write_json_safely(qa_path, analysis_ready_qa)
     return {
         "analysis_ready_zip": analysis_ready_zip,
         "dictionary": dictionary_csv,
@@ -492,7 +492,7 @@ def _build_consumed_input_manifest(
                 if stage_name not in candidate_entry["used_by_stages"]:
                     candidate_entry["used_by_stages"].append(stage_name)
     entries = sorted(used.values(), key=lambda item: (item["output_path"], item["sha256"] or ""))
-    return _atomic_write_json(release_dir / "download_manifest.json", entries)
+    return _write_json_safely(release_dir / "download_manifest.json", entries)
 
 
 def _freeze_optional_release_assets(
@@ -594,8 +594,8 @@ def _run_deep_release_audit(run_dir: Path) -> dict[str, Any]:
     }
     release_qa_path = run_dir / "release/deep_release_qa.json"
     run_qa_path = run_dir / "qa/deep_release_qa.json"
-    _atomic_write_json(release_qa_path, deep_qa)
-    _atomic_write_json(run_qa_path, deep_qa)
+    _write_json_safely(release_qa_path, deep_qa)
+    _write_json_safely(run_qa_path, deep_qa)
     if deep_qa["status"] != "passed":
         failures = [
             check["name"] for check in deep_qa["checks"]
@@ -692,8 +692,8 @@ def _promote_release(
         "assets": assets,
     }
     manifests_dir = root / "releases"
-    versioned_path = _atomic_write_json(manifests_dir / f"{run_dir.name}.json", manifest)
-    _atomic_write_json(manifests_dir / "current.json", manifest)
+    versioned_path = _write_json_safely(manifests_dir / f"{run_dir.name}.json", manifest)
+    _write_json_safely(manifests_dir / "current.json", manifest)
     return versioned_path
 
 
@@ -776,7 +776,7 @@ def _evaluate_candidate_gates(
         "required_candidate_assets_present": required_assets,
         "real_revision_and_locked_environment": revision_and_lock,
     }
-    _atomic_write_json(run_dir / "qa/promotion_gates.json", gates)
+    _write_json_safely(run_dir / "qa/promotion_gates.json", gates)
     return gates
 
 
@@ -815,7 +815,7 @@ def _write_candidate_manifest(
         "promotion_gates": promotion_gates,
         "assets": assets,
     }
-    return _atomic_write_json(
+    return _write_json_safely(
         root / "releases/candidates" / f"{run_dir.name}.json", manifest
     )
 

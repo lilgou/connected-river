@@ -12,9 +12,9 @@ version: 0.1.0
 date-released: 2026-10-29
 license: MIT
 abstract: >-
-  This repository shows how monitoring data collected at different places and
-  times can be connected through a river network. It includes a reusable
-  matching workflow and an England-wide example.
+  The Connected River is a reusable workflow for bringing together monitoring
+  data collected at different points along the river network and through time.
+  It includes an adaptable matching recipe and an England-wide example.
 keywords:
   - river health
   - environmental data

@@ -44,7 +44,7 @@ def is_valid_observation_cache(path: str | Path) -> bool:
             return True
     except Exception:
         # Cache validation must treat every parser/footer failure as a miss so
-        # the normal downloader can replace the partition atomically.
+        # the normal downloader can safely replace the partition.
         return False
     return False
 
@@ -59,7 +59,7 @@ def _session() -> requests.Session:
         backoff_factor=1.0,
         # The public endpoint can return a transient 403 when a burst crosses
         # its traffic controls. Retrying slowly is safe because these requests
-        # are read-only and final partitions are written atomically.
+        # are read-only and final partitions are replaced only when complete.
         status_forcelist=(403, 429, 500, 502, 503, 504),
         allowed_methods=frozenset(["GET", "POST"]),
         raise_on_status=False,
@@ -243,7 +243,7 @@ def download_observations(
 
     out = pd.concat(chunks, ignore_index=True).drop_duplicates() if chunks else pd.DataFrame()
 
-    # Write the partition atomically. If a process is interrupted, the final
+    # Write through a temporary file. If a process is interrupted, the final
     # cache path remains absent (or retains its previous valid file) instead of
     # looking complete while containing a truncated Parquet footer.
     temporary_output = output_path.with_name(

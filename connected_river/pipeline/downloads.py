@@ -95,7 +95,7 @@ def _download_partitioned(
     overwrite: bool,
     **kwargs,
 ) -> list[Path]:
-    """Reuse old partitions and atomically renew only the declared recent window."""
+    """Reuse old partitions and safely renew only the declared recent window."""
     stable_years, refreshed_years = _partition_refresh_plan(
         years,
         refresh_recent_years=refresh_recent_years,
